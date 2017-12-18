@@ -1,0 +1,11 @@
+.side-bar {
+  top: 40px;
+  right: 0;
+  left: 0;
+  bottom: 0;
+  position: fixed;
+}
+
+.content {
+  margin-top: 50px;
+}
