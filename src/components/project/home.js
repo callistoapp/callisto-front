@@ -8,23 +8,23 @@ import {Container, Segment, Header, Grid, Divider} from 'semantic-ui-react'
 import { gql, graphql } from 'react-apollo';
 
 class ProjectHome extends Component {
-    static propTypes = {};
-
+    /*componentDidUpdate() {
+        this.props.data.refetch();
+    }*/
     render() {
-        console.log(this.props.data.projectByName);
         return (
             <Layout active={1}>
                 <Header as="h1" attached="top">
-                    OVERVIEW
+                    Overview
                 </Header>
                 <Segment attached>
                     <Grid columns={3}>
                         <Grid.Column>
                             <Segment circular style={{width: 175, height: 175}} inverted color="blue">
                                 <Header as='h2'>
-                                    3
+                                    {this.props.data.projectByName && this.props.data.projectByName.tasks.length}
                                     <Header.Subheader>
-                                        PROJECTS
+                                        TASKS
                                     </Header.Subheader>
                                 </Header>
                             </Segment>
@@ -59,7 +59,11 @@ class ProjectHome extends Component {
 export default graphql(gql`
   query GetProject($name: String!) {
     projectByName(name: $name){
-        name
+        name,
+        tasks {
+            id,
+            status
+        }
     }
   }
 `, {
