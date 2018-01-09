@@ -44,7 +44,6 @@ class NewProject extends Component {
     };
 
     render() {
-        console.log(this.props);
         const { name, url, description, repository } = this.state;
         return (
             <Container>
