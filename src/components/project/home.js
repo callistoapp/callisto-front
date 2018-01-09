@@ -62,7 +62,7 @@ export default graphql(gql`
         name,
         tasks {
             id,
-            status
+            statusId
         }
     }
   }
