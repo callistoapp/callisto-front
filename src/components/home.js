@@ -3,8 +3,7 @@
  */
 
 import React, {Component} from 'react';
-import propTypes from 'prop-types';
-import {Container, Segment, Header, Grid, Divider} from 'semantic-ui-react'
+import {Header, } from 'semantic-ui-react'
 
 class Home extends Component {
     static propTypes = {};

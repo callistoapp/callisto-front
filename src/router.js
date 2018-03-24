@@ -9,27 +9,48 @@ import Home from './components/home';
 import ProjectHome from './components/project/home';
 import Tasks from './components/project/tasks';
 import NewTask from './components/project/new_task';
+import ProjectLayout from './components/project/layout';
 import Releases from './components/project/releases';
 import App from './App';
 import {Router, Route, Switch} from 'react-router'
 
 import createHistory from 'history/createBrowserHistory';
 
+const AppRoute = ({component: Component, layout: Layout, ...rest}) => (
+  <Route {...rest} render={props => (
+    <App>
+      <Layout>
+        <Component {...props} />
+      </Layout>
+    </App>
+  )}/>
+);
+
+const NoLayout = props => (
+  <div>
+    {props.children}
+  </div>
+);
+
+const MainLayout = props => (
+  <App>
+    {props.children}
+  </App>
+);
+
 
 const AppRouter = () => (
-    <Router history={createHistory()}>
-        <App>
-            <Route exact path="/" component={Home}/>
-            <Route path="/projects" component={Projects}/>
-            <Route path="/new_project" component={NewProject}/>
-            <Route path="/:project/home" component={ProjectHome}/>
-            <Route path="/:project/tasks" component={Tasks}/>
-            <Route path="/:project/new_task" component={NewTask}/>
-            <Route path="/:project/releases" component={Releases}/>
-        </App>
-    </Router>
+  <Router history={createHistory()}>
+    <Switch>
+      <AppRoute exact path="/" layout={MainLayout} component={Home}/>
+      <AppRoute exact path="/projects" layout={MainLayout} component={Projects}/>
+      <AppRoute exact path="/new_project" layout={MainLayout} component={NewProject}/>
+      <AppRoute path="/:project/tasks" layout={ProjectLayout} component={Tasks}/>
+      <AppRoute path="/:project/new_task" layout={ProjectLayout} component={NewTask}/>
+      <AppRoute path="/:project/releases" layout={ProjectLayout} component={Releases}/>
+      <AppRoute path="/:project/home" layout={ProjectLayout} component={ProjectHome}/>
+    </Switch>
+  </Router>
 );
 
 export default AppRouter;
-
-

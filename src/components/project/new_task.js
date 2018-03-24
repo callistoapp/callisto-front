@@ -3,12 +3,12 @@
  */
 
 import React, { Component } from 'react';
-import { Link } from 'react-router-dom';
 import {
-    Container, Image, Card, Header, Button, Icon, Grid, Form, Checkbox,
-    Message
+    Container, Header, Button, Form, Message
 } from 'semantic-ui-react'
-import { gql, graphql } from 'react-apollo';
+import { graphql } from 'react-apollo';
+import { gql } from 'apollo-boost';
+
 
 class NewTask extends Component {
     constructor(props) {

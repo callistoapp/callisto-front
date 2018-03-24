@@ -4,9 +4,9 @@
 
 import React, {Component} from 'react';
 import {Modal, Button, Icon} from 'semantic-ui-react'
-import {compose, gql, graphql} from "react-apollo/index";
+import {compose, graphql} from "react-apollo/index";
+import { gql } from 'apollo-boost';
 import * as _ from "lodash";
-
 
 const getTaskQuery = graphql(gql`
   query task($id: Int!) {
