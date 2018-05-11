@@ -1,15 +1,20 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import './index.css';
-import Router from './router';
+
 import { onError } from "apollo-link-error";
 import { HttpLink } from 'apollo-link-http';
 import { ApolloLink } from 'apollo-link';
 import { ApolloClient } from 'apollo-boost';
 import { InMemoryCache } from 'apollo-cache-inmemory';
 import { ApolloProvider } from 'react-apollo';
-import registerServiceWorker from './registerServiceWorker';
+import DashboardLayout from './layouts/dashboard';
+import {Route, Router, Switch} from "react-router-dom";
+import {createBrowserHistory} from 'history';
 
+import registerServiceWorker from './registerServiceWorker';
+import "./assets/css/material-dashboard-react.css?v=1.2.0";
+
+const history = createBrowserHistory();
 const httpLink = new HttpLink({ uri: 'http://api.callisto.com/graphql', credentials: "include" });
 
 const errorLink = onError(({ response, graphQLErrors, networkError }) => {
@@ -20,11 +25,11 @@ const errorLink = onError(({ response, graphQLErrors, networkError }) => {
       ),
     );
 
-  if (networkError) console.log(`[Network error]: ${networkError}`);
-
-  if (networkError.statusCode === 401)
-    window.location = "http://auth.callisto.com/login"
-
+  if (networkError) {
+    console.log(`[Network error]: ${networkError}`);
+    if (networkError.statusCode === 401)
+      window.location = "http://auth.callisto.com/login"
+  }
 });
 
 const link = ApolloLink.from([
@@ -39,7 +44,11 @@ const client = new ApolloClient({
 
 ReactDOM.render(
     <ApolloProvider client={client}>
-        <Router />
+      <Router history={history}>
+        <Switch>
+          <Route path='/' component={DashboardLayout}/>
+        </Switch>
+      </Router>
     </ApolloProvider>,
     document.getElementById('root')
 );

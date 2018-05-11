@@ -11,7 +11,7 @@ import {gql} from 'apollo-boost';
 
 import {Link} from "react-router-dom";
 import {DragDropContext, Droppable, Draggable} from 'react-beautiful-dnd';
-import TaskPopup from '../global/task_popup';
+import TaskPopup from '../popups/task_popup';
 
 const getTasksQuery = graphql(gql`
     query GetTasksForProject($name: String!) {
