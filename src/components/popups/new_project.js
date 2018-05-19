@@ -19,6 +19,7 @@ import {graphql} from 'react-apollo';
 import {gql} from 'apollo-boost';
 import {withStyles} from 'material-ui/styles';
 import {withRouter} from 'react-router';
+import EditStatusDialog from './edit_status';
 
 
 const styles = theme => ({
@@ -90,7 +91,7 @@ class NewProject extends Component {
   };
 
   handleEditTask = (name, i) => e => {
-    this.setState({taskEditOpen: true, taskEditValue: {name, index: i}})
+    this.setState({statusEditOpen: true, statusEditValue: {name, index: i}})
   };
 
   deleteCategory = name => e => {
@@ -104,23 +105,23 @@ class NewProject extends Component {
     statuses.push("");
     this.setState({
       statuses,
-      taskEditOpen : true,
-      taskEditValue: {name: "", index: statuses.length - 1}
+      statusEditOpen : true,
+      statusEditValue: {name: "", index: statuses.length - 1}
     })
   };
 
   constructor(props) {
     super(props);
     this.state        = {
-      name         : '',
-      url          : '',
-      description  : '',
-      repository   : '',
-      statuses     : ['backlog', 'wip', 'verify', 'done'],
-      taskEditOpen : false,
-      taskEditValue: {},
-      loading      : false,
-      error        : ''
+      name           : '',
+      url            : '',
+      description    : '',
+      repository     : '',
+      statuses       : ['backlog', 'wip', 'verify', 'done'],
+      statusEditOpen : false,
+      statusEditValue: {},
+      loading        : false,
+      error          : ''
     };
     this.handleChange = this.handleChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
@@ -132,8 +133,11 @@ class NewProject extends Component {
     const {classes}                                      = this.props;
     const {name, url, description, repository, statuses} = this.state;
     return ([
-        <Dialog open={this.props.open} aria-labelledby="form-dialog-title"
-                onClose={this.props.handleClose}>
+        <Dialog
+          open={this.props.open}
+          aria-labelledby="form-dialog-title"
+          onClose={this.props.handleClose}
+        >
           <DialogTitle id="form-dialog-title">Create new project</DialogTitle>
           <DialogContent>
             <DialogContentText>
@@ -200,64 +204,13 @@ class NewProject extends Component {
             </form>
           </DialogContent>
         </Dialog>,
-        <EditTaskDialog
-          open={this.state.taskEditOpen}
-          handleClose={() => this.setState({taskEditOpen: false})}
+        <EditStatusDialog
+          open={this.state.statusEditOpen}
+          handleClose={() => this.setState({statusEditOpen: false})}
           handleEdit={this.updateStatus}
-          value={this.state.taskEditValue}
+          value={this.state.statusEditValue}
         />
       ]
-    );
-  }
-}
-
-
-class EditTaskDialog extends React.Component {
-  state = {
-    name : "",
-    index: -1
-  };
-
-  componentWillReceiveProps(nextProps, nextContext) {
-    this.setState({...nextProps.value})
-  }
-
-  render() {
-    return (
-      <Dialog
-        open={this.props.open}
-        onClose={this.handleClose}
-        aria-labelledby="form-dialog-title"
-      >
-        <DialogTitle
-          id="form-dialog-title">{this.props.name ? "Edit task name" : "New task"}</DialogTitle>
-        <DialogContent>
-          <TextField
-            autoFocus
-            margin="dense"
-            id="name"
-            label="Task name"
-            type="text"
-            onChange={(e) => this.setState({name: e.target.value})}
-            value={this.state.name}
-            fullWidth
-          />
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={this.props.handleClose} color="secondary">
-            Cancel
-          </Button>
-          <Button
-            onClick={() => {
-              this.props.handleEdit(this.state.name, this.state.index);
-              this.props.handleClose();
-            }}
-            color="primary"
-          >
-            Edit
-          </Button>
-        </DialogActions>
-      </Dialog>
     );
   }
 }
