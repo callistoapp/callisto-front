@@ -1,13 +1,7 @@
 import * as _ from 'lodash';
 import React, {Component} from 'react';
-import {
-  Typography,
-  Button,
-  Grid,
-  Card,
-  CardContent,
-  CardActions
-} from 'material-ui';
+import {Button, Grid} from 'material-ui';
+import TaskCard from '../components/custom/task_card'
 import RegularCard from '../components/regular_card';
 import {withStyles} from 'material-ui/styles';
 import {Add} from '@material-ui/icons';
@@ -20,6 +14,9 @@ import EditTask from '../components/popups/edit_task';
 import NewTask from '../components/popups/new_task';
 
 const styles = theme => ({
+  root: {
+    padding: 10
+  },
   fab     : {
     position: 'absolute',
     bottom  : theme.spacing.unit * 2,
@@ -67,12 +64,20 @@ const moveTaskMutation = graphql(gql`
             type,
             description
         }
-    }`
+    }`, {name: "moveTask"}
+);
+
+
+const deleteTaskMutation = graphql(gql`
+    mutation deleteTask($id: Int!) {
+        deleteTask(id: $id)
+    }`, {name: 'deleteTask'}
 );
 
 const withData = compose(
   getTasksQuery,
-  moveTaskMutation
+  moveTaskMutation,
+  deleteTaskMutation
 );
 
 
@@ -94,10 +99,21 @@ class Tasks extends Component {
     }
   }
 
+  handleDelete = (id) => {
+    this.setState({loading: true});
+    this.props.deleteTask({variables: {id}})
+      .then(({data}) => {
+        this.setState({loading: false, error: ''});
+        this.props.data.refetch();
+      }).catch((error) => {
+        this.setState({loading: false, error});
+    });
+  };
+
   onDragEnd(result) {
     if (!result.destination)
       return;
-    this.props.mutate({
+    this.props.moveTask({
       variables: {
         id      : parseInt(result.draggableId, 10),
         statusId: parseInt(result.destination.droppableId, 10)
@@ -116,7 +132,6 @@ class Tasks extends Component {
     const statuses  = _.get(this.props, 'data.projectById.statuses');
     const tasks     = _.get(this.props, 'data.projectById.tasks');
     const {classes} = this.props;
-
     return (
       <div>
         <Grid container justify="center" spacing={8}>
@@ -138,7 +153,6 @@ class Tasks extends Component {
                         style={snapshot.isDraggingOver ? {backgroundColor: '#FBB'} : {}}
                         headerColor={"blue"}
                         cardTitle={status.name}
-                        // cardSubtitle={_.filter(tasks, {statusId: status.id}).length + " tasks"}
                         content={
                           _.map(_.filter(tasks, {statusId: status.id}), (task, key) =>
                             <Draggable
@@ -156,24 +170,17 @@ class Tasks extends Component {
                                   ref={dragProvided.innerRef}
                                   {...dragProvided.dragHandleProps}
                                 >
-                                  <Card className={classes.card}>
-                                    <CardContent>
-                                      <Typography className={classes.title} color="textSecondary">
-                                        {task.name}
-                                      </Typography>
-                                    </CardContent>
-                                    <CardActions>
-                                      <Button
-                                        onClick={() => this.setState({
-                                          editOpen: true,
-                                          editTask: task
-                                        })}
-                                        size="small"
-                                      >
-                                        Edit
-                                      </Button>
-                                    </CardActions>
-                                  </Card>
+                                  <TaskCard
+                                    handleEdit={() => this.setState({
+                                      editOpen: true,
+                                      editTask: task
+                                    })}
+                                    handleDelete={() => {
+                                      if (window.confirm('Delete '+ task.name))
+                                        this.handleDelete(task.id);
+                                    }}
+                                    {...task}
+                                  />
                                   {dragProvided.placeholder}
                                 </div>
                               )}
@@ -197,8 +204,10 @@ class Tasks extends Component {
           task={this.state.editTask}
           statuses={statuses}
           onClose={() => this.setState({editOpen: false})}
+          refetch={_.get(this.props.data, 'refetch')}
         />
         <NewTask
+          refetch={_.get(this.props.data, 'refetch')}
           open={this.state.newOpen}
           onClose={() => this.setState({newOpen: false})}
         />
