@@ -1,6 +1,8 @@
 import DashboardPage from './views/dashboard';
 import ReleaseList from './views/releases';
 import SettingsPage from './views/settings';
+import ProfilePage from './views/profile';
+import HomePage from './views/home';
 import TaskBoard from './views/task_board';
 
 import {
@@ -8,38 +10,57 @@ import {
   List,
   Settings,
   ViewWeek,
+  Person,
+  Home,
 } from "@material-ui/icons";
 
-const dashboardRoutes = [
+export const dashboardRoutes = [
   {
-    path: "/dashboard",
+    path: "/p/dashboard",
     sidebarName: "Dashboard",
     navbarName: "Project Dashboard",
     icon: Dashboard,
     component: DashboardPage
   },
   {
-    path: "/tasks",
+    path: "/p/tasks",
     sidebarName: "Tasks",
     navbarName: "Task Board",
     icon: ViewWeek,
     component: TaskBoard
   },
   {
-    path: "/releases",
+    path: "/p/releases",
     sidebarName: "Releases",
     navbarName: "Release List",
     icon: List,
     component: ReleaseList
   },
   {
-    path: "/settings",
+    path: "/p/settings",
     sidebarName: "Settings",
     navbarName: "Project Global Settings",
     icon: Settings,
     component: SettingsPage
-  },
-  { redirect: true, path: "/", to: "/dashboard", navbarName: "Redirect" }
+  }
 ];
 
-export default dashboardRoutes;
+
+export const mainRoutes = [
+  {
+    path: "/profile",
+    sidebarName: "Profile",
+    navbarName: "User Profile",
+    icon: Person,
+    component: ProfilePage
+  },
+  {
+    path: "/home",
+    sidebarName: "Home",
+    navbarName: "Callisto",
+    icon: Home,
+    component: HomePage
+  },
+  { redirect: true, path: "/", to: "/home", navbarName: "Redirect" }
+];
+

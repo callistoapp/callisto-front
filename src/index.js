@@ -8,6 +8,7 @@ import { ApolloClient } from 'apollo-boost';
 import { InMemoryCache } from 'apollo-cache-inmemory';
 import { ApolloProvider } from 'react-apollo';
 import DashboardLayout from './layouts/dashboard';
+import MainLayout from './layouts/root';
 import {Route, Router, Switch} from "react-router-dom";
 import {createBrowserHistory} from 'history';
 
@@ -15,7 +16,7 @@ import registerServiceWorker from './registerServiceWorker';
 import "./assets/css/material-dashboard-react.css?v=1.2.0";
 
 const history = createBrowserHistory();
-const httpLink = new HttpLink({ uri: 'http://api.callisto.com/graphql', credentials: "include" });
+const httpLink = new HttpLink({ uri: 'https://api.callisto.com/graphql', credentials: "include" });
 
 const errorLink = onError(({ response, graphQLErrors, networkError }) => {
   if (graphQLErrors)
@@ -46,7 +47,8 @@ ReactDOM.render(
     <ApolloProvider client={client}>
       <Router history={history}>
         <Switch>
-          <Route path='/' component={DashboardLayout}/>
+          <Route path='/p' component={DashboardLayout}/>
+          <Route path='/' component={MainLayout}/>
         </Switch>
       </Router>
     </ApolloProvider>,
