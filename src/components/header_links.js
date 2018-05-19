@@ -1,6 +1,8 @@
 import React from "react";
 import classNames from "classnames";
 import { Manager, Target, Popper } from "react-popper";
+import { withRouter } from 'react-router-dom'
+
 import {
   withStyles,
   IconButton,
@@ -12,8 +14,6 @@ import {
   Hidden
 } from "material-ui";
 import { Person, Notifications} from "@material-ui/icons";
-// import CustomInput from "./custom_input";
-// import SearchButton from "./icon_button";
 
 import headerLinksStyle from "../assets/jss/material-dashboard-react/headerLinksStyle";
 
@@ -43,39 +43,16 @@ class HeaderLinks extends React.Component {
     this.setState({notificationOpen: false, profileOpen: false});
   };
 
+  goToProfile = () => {
+    this.handleCloseProfile();
+    this.props.history.push("/profile");
+  };
+
   render() {
     const { classes } = this.props;
     const { notificationOpen, profileOpen } = this.state;
     return (
       <div>
-        {/*<CustomInput*/}
-          {/*formControlProps={{*/}
-            {/*className: classes.margin + " " + classes.search*/}
-          {/*}}*/}
-          {/*inputProps={{*/}
-            {/*placeholder: "Search",*/}
-            {/*inputProps: {*/}
-              {/*"aria-label": "Search"*/}
-            {/*}*/}
-          {/*}}*/}
-        {/*/>*/}
-        {/*<SearchButton*/}
-          {/*color="white"*/}
-          {/*aria-label="edit"*/}
-          {/*customClass={classes.margin + " " + classes.searchButton}*/}
-        {/*>*/}
-          {/*<Search className={classes.searchIcon} />*/}
-        {/*</SearchButton>*/}
-        {/*<IconButton*/}
-          {/*color="inherit"*/}
-          {/*aria-label="Dashboard"*/}
-          {/*className={classes.buttonLink}*/}
-        {/*>*/}
-          {/*<Dashboard className={classes.links} />*/}
-          {/*<Hidden mdUp>*/}
-            {/*<p className={classes.linkText}>Dashboard</p>*/}
-          {/*</Hidden>*/}
-        {/*</IconButton>*/}
         <Manager style={{ display: "inline-block" }}>
           <Target>
             <IconButton
@@ -162,7 +139,7 @@ class HeaderLinks extends React.Component {
               <Person className={classes.links} />
               <Hidden mdUp>
                 <p onClick={this.handleClickProfile} className={classes.linkText}>
-                  Notification
+                  Profile
                 </p>
               </Hidden>
             </IconButton>
@@ -185,7 +162,7 @@ class HeaderLinks extends React.Component {
                 <Paper className={classes.dropdown}>
                   <MenuList role="menu">
                     <MenuItem
-                      onClick={this.handleCloseProfile}
+                      onClick={this.goToProfile}
                       className={classes.dropdownItem}
                     >
                       My profile
@@ -207,4 +184,4 @@ class HeaderLinks extends React.Component {
   }
 }
 
-export default withStyles(headerLinksStyle)(HeaderLinks);
+export default withRouter(withStyles(headerLinksStyle)(HeaderLinks));
