@@ -76,6 +76,7 @@ class TaskPopup extends Component {
       .then(({data}) => {
         this.setState({loading: false, error: ''});
         this.props.onClose();
+        this.props.refetch();
       }).catch((error) => {
         this.setState({loading: false, error});
     });
@@ -123,7 +124,6 @@ class TaskPopup extends Component {
   }
 
   render() {
-    console.log('in edit task', this.props)
     return (
       <Dialog open={this.props.open}>
         <DialogTitle>{"Edit " + _.get(this.props, 'data.task.name')}</DialogTitle>
