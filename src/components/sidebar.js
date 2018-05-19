@@ -88,6 +88,7 @@ const Sidebar = ({ ...props }) => {
     handleNewProjectToggle,
     location
   } = props;
+
   let links = (
     <List className={classes.list}>
       {_.map(routes, (route, key) => {
@@ -100,7 +101,7 @@ const Sidebar = ({ ...props }) => {
         });
         return (
           <NavLink
-            to={route.path+location.search}
+            to={`${route.path}${location.search}`}
             className={classes.item}
             activeClassName="active"
             key={key}
