@@ -35,7 +35,7 @@ const chartCardStyle = {
   blueCardHeader,
   purpleCardHeader,
   cardContent: {
-    padding: "15px 20px"
+    padding: "10px"
   },
   cardTitle: {
     marginTop: "0",

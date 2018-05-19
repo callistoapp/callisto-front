@@ -42,7 +42,7 @@ function RegularCard({ ...props }) {
         title={cardTitle}
         subheader={cardSubtitle}
       />
-      <CardContent>{content}</CardContent>
+      <CardContent className={classes.cardContent}>{content}</CardContent>
       {footer !== undefined ? (
         <CardActions className={classes.cardActions}>{footer}</CardActions>
       ) : null}

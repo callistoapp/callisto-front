@@ -36,7 +36,7 @@ const statsCardStyle = {
   cardContent: {
     textAlign: "right",
     paddingTop: "10px",
-    padding: "15px 20px"
+    padding: "10px"
   },
   cardIcon: {
     width: "40px",

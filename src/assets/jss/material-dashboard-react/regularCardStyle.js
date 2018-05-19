@@ -27,6 +27,12 @@ const regularCardStyle = {
     marginLeft: 0,
     marginRight: 0
   },
+  cardContent: {
+    padding: "10px 5px",
+    '&:last-child': {
+      paddingBottom: 10,
+    },
+  },
   orangeCardHeader,
   greenCardHeader,
   redCardHeader,
