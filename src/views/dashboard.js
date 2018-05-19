@@ -1,31 +1,51 @@
 import React from 'react';
 import qs from 'query-string';
-import {graphql} from 'react-apollo';
+import {Query} from 'react-apollo';
 import {gql} from 'apollo-boost';
+import {withRouter} from 'react-router';
 import * as _ from 'lodash';
-const withData = graphql(gql`
+
+const GET_PROJECT = gql`
   query GetProject($id: Int!) {
     projectById(id: $id){
-        name,
-        description,
-        repository
+      id,
+      name,
+      description,
+      repository,
+      tasks {
+        statusId
+      },
+      statuses {
+        id,
+        index
+      }
     }
   }
-`, {
-  options: (props) => ({
-    variables: {id: parseInt(qs.parse(props.location.search).project_id, 10)},
-  })
-});
+`;
 
-class Dashboard extends React.Component {
-  render() {
-    const project = _.get(this.props.data, 'projectById');
-    if (!project)
-      return (<div>Loading...</div>);
-    return (
-      <div>Dashboard of the project {this.props.data.projectById.name}</div>
-    )
-  }
-}
 
-export default withData(Dashboard);
+const Dashboard = ({location}) => {
+  const projectId = parseInt(qs.parse(location.search).project_id, 10);
+  if (!projectId)
+    return "No project Specified";
+  return (
+    <Query query={GET_PROJECT} variables={{id: projectId}}>
+      {({ loading, error, data }) => {
+        if (loading) return null;
+        if (error) return `Error!: ${error}`;
+        const {statuses, name, tasks} = data.projectById;
+        const maxStatus = _.get(_.find(statuses, {index: _.max(_.map(statuses, 'index'))}), 'id');
+        const finished = _.filter(tasks, {statusId: maxStatus});
+        const done = finished.length * 100 / tasks.length;
+        return (
+          <div>
+            <h2>{name}</h2>
+            {done || 0} %
+          </div>
+        );
+      }}
+    </Query>
+  )
+};
+
+export default withRouter(Dashboard);
