@@ -1,10 +1,10 @@
 import * as _ from 'lodash';
 import React, {Component} from 'react';
-import {Button, Grid} from 'material-ui';
+import {Button, Grid, IconButton} from 'material-ui';
 import TaskCard from '../components/custom/task_card'
 import RegularCard from '../components/regular_card';
 import {withStyles} from 'material-ui/styles';
-import {Add} from '@material-ui/icons';
+import {Add, Edit} from '@material-ui/icons';
 import {graphql, compose} from 'react-apollo';
 import {gql} from 'apollo-boost';
 import {DragDropContext, Droppable, Draggable} from 'react-beautiful-dnd';
@@ -12,6 +12,7 @@ import qs from 'query-string';
 
 import EditTask from '../components/popups/edit_task';
 import NewTask from '../components/popups/new_task';
+import EditStatusDialog from "../components/popups/edit_status";
 
 const styles = theme => ({
   root: {
@@ -74,10 +75,19 @@ const deleteTaskMutation = graphql(gql`
     }`, {name: 'deleteTask'}
 );
 
+const editStatusMutation = graphql(gql`
+    mutation editStatus($id: Int!, $name: String!) {
+        editStatus(id: $id, name: $name) {
+          name
+        }
+    }`, {name: 'editStatus'}
+);
+
 const withData = compose(
   getTasksQuery,
   moveTaskMutation,
-  deleteTaskMutation
+  deleteTaskMutation,
+  editStatusMutation
 );
 
 
@@ -88,6 +98,8 @@ class Tasks extends Component {
     this.state     = {
       editOpen: false,
       newOpen : false,
+      statusEditOpen: false,
+      statusEditValue: {},
       editTask: {
         name: "",
         description: "",
@@ -102,6 +114,16 @@ class Tasks extends Component {
   handleDelete = (id) => {
     this.setState({loading: true});
     this.props.deleteTask({variables: {id}})
+      .then(({data}) => {
+        this.setState({loading: false, error: ''});
+        this.props.data.refetch();
+      }).catch((error) => {
+        this.setState({loading: false, error});
+    });
+  };
+
+  handleEditStatus = (name, id) => {
+    this.props.editStatus({variables: {id, name}})
       .then(({data}) => {
         this.setState({loading: false, error: ''});
         this.props.data.refetch();
@@ -139,7 +161,7 @@ class Tasks extends Component {
             onDragEnd={this.onDragEnd}
             onDragStart={this.onDragStart}
           >
-            {_.map(statuses, (status, key) => (
+            {_.map(_.sortBy(statuses, 'index'), (status, key) => (
               <Grid key={key} item xs>
                 <Droppable
                   droppableId={String(status.id)}
@@ -152,6 +174,21 @@ class Tasks extends Component {
                       <RegularCard
                         style={snapshot.isDraggingOver ? {backgroundColor: '#FBB'} : {}}
                         headerColor={"blue"}
+                        headerAction={
+                          <IconButton
+                            onClick={() =>
+                              this.setState({
+                                statusEditOpen: true,
+                                statusEditValue: {
+                                  name: status.name,
+                                  index: status.id
+                                }
+                              })
+                            }
+                          >
+                            <Edit />
+                          </IconButton>
+                        }
                         cardTitle={status.name}
                         content={
                           _.map(_.filter(tasks, {statusId: status.id}), (task, key) =>
@@ -210,6 +247,12 @@ class Tasks extends Component {
           refetch={_.get(this.props.data, 'refetch')}
           open={this.state.newOpen}
           onClose={() => this.setState({newOpen: false})}
+        />
+        <EditStatusDialog
+          open={this.state.statusEditOpen}
+          handleClose={() => this.setState({statusEditOpen: false})}
+          handleEdit={this.handleEditStatus}
+          value={this.state.statusEditValue}
         />
       </div>
     );
