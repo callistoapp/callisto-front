@@ -10,15 +10,11 @@ import {
   DialogContent,
   DialogActions,
   DialogContentText,
-  IconButton,
-  Typography,
   Snackbar,
   TextField,
-  FormControl,
   InputLabel,
-  Button
+  Button, Chip
 } from 'material-ui'
-import {Close, Delete} from '@material-ui/icons'
 import {graphql} from 'react-apollo';
 import {gql} from 'apollo-boost';
 import {withStyles} from 'material-ui/styles';
@@ -26,18 +22,21 @@ import {withRouter} from 'react-router';
 
 
 const styles = theme => ({
-  fab     : {
+  chip     : {
+    margin: theme.spacing.unit / 2,
+  },
+  fab      : {
     position: 'absolute',
     bottom  : theme.spacing.unit * 2,
     right   : theme.spacing.unit * 2,
   },
-  flex    : {
+  flex     : {
     flex: 1,
   },
-  paper   : {
+  paper    : {
     width: 330
   },
-  centered: {
+  centered : {
     textAlign: 'center'
   },
   topMarged: {
@@ -75,7 +74,7 @@ class NewProject extends Component {
           });
           this.props.history.push({
             pathname: `/p/dashboard`,
-            search: `?project_id=${data.createProject.id}`
+            search  : `?project_id=${data.createProject.id}`
           });
           this.props.handleClose();
         }).catch((error) => {
@@ -84,13 +83,17 @@ class NewProject extends Component {
 
   };
 
-  updateCategory = i => e => {
+  updateStatus = (value, i) => {
     let statuses = _.assign([], this.state.statuses);
-    statuses[i]  = e.target.value;
+    statuses[i]  = value;
     this.setState({statuses})
   };
 
-  deleteCategory = name => {
+  handleEditTask = (name, i) => e => {
+    this.setState({taskEditOpen: true, taskEditValue: {name, index: i}})
+  };
+
+  deleteCategory = name => e => {
     this.setState({
       statuses: _.without(this.state.statuses, name)
     })
@@ -99,103 +102,161 @@ class NewProject extends Component {
   addCategory = () => {
     let statuses = _.assign([], this.state.statuses);
     statuses.push("");
-    this.setState({statuses})
+    this.setState({
+      statuses,
+      taskEditOpen : true,
+      taskEditValue: {name: "", index: statuses.length - 1}
+    })
   };
 
   constructor(props) {
     super(props);
-    this.state          = {
-      name       : '',
-      url        : '',
-      description: '',
-      repository : '',
-      statuses   : ['backlog', 'wip', 'verify', 'done'],
-      loading    : false,
-      error      : ''
+    this.state        = {
+      name         : '',
+      url          : '',
+      description  : '',
+      repository   : '',
+      statuses     : ['backlog', 'wip', 'verify', 'done'],
+      taskEditOpen : false,
+      taskEditValue: {},
+      loading      : false,
+      error        : ''
     };
-    this.handleChange   = this.handleChange.bind(this);
-    this.handleSubmit   = this.handleSubmit.bind(this);
-    this.updateCategory = this.updateCategory.bind(this);
-    this.addCategory    = this.addCategory.bind(this);
+    this.handleChange = this.handleChange.bind(this);
+    this.handleSubmit = this.handleSubmit.bind(this);
+    this.updateStatus = this.updateStatus.bind(this);
+    this.addCategory  = this.addCategory.bind(this);
   }
 
   render() {
     const {classes}                                      = this.props;
     const {name, url, description, repository, statuses} = this.state;
-    return (
-      <Dialog open={this.props.open} aria-labelledby="form-dialog-title" onClose={this.props.handleClose}>
-        <DialogTitle id="form-dialog-title">Create new project</DialogTitle>
-        <DialogContent>
-          <DialogContentText>
-            Define the details of the projects
-          </DialogContentText>
+    return ([
+        <Dialog open={this.props.open} aria-labelledby="form-dialog-title"
+                onClose={this.props.handleClose}>
+          <DialogTitle id="form-dialog-title">Create new project</DialogTitle>
+          <DialogContent>
+            <DialogContentText>
+              Define the details of the projects
+            </DialogContentText>
 
-          <form onSubmit={this.handleSubmit}>
-            {this.state.error && <Snackbar
-              error
-              header='Error occurred'
-              content={this.state.error}
-            />}
-            <TextField
-              fullWidth
-              label={'Name'}
-              name='name'
-              value={name}
-              placeholder='Name of the project'
-              onChange={this.handleChange('name')}
-            />
-            <TextField
-              fullWidth
-              label={'Description'}
-              name='description'
-              value={description}
-              placeholder='Describe the project objectives'
-              onChange={this.handleChange('description')}
-            />
-            <TextField
-              fullWidth
-              label={'Repository'}
-              name='repository'
-              value={repository}
-              placeholder='The Url of the repository hosing the source code'
-              onChange={this.handleChange('repository')}
-            />
-            <TextField
-              fullWidth
-              label={'Url'}
-              name='url'
-              value={url}
-              placeholder='The url of the desired website'
-              onChange={this.handleChange('url')}
-            />
-            <div className={classes.topMarged}>
-              <InputLabel>Board categories</InputLabel>
-              <br />
+            <form onSubmit={this.handleSubmit}>
+              {this.state.error && <Snackbar
+                error
+                header='Error occurred'
+                content={this.state.error}
+              />}
+              <TextField
+                fullWidth
+                label={'Name'}
+                name='name'
+                value={name}
+                placeholder='Name of the project'
+                onChange={this.handleChange('name')}
+              />
+              <TextField
+                fullWidth
+                label={'Description'}
+                name='description'
+                value={description}
+                placeholder='Describe the project objectives'
+                onChange={this.handleChange('description')}
+              />
+              <TextField
+                fullWidth
+                label={'Repository'}
+                name='repository'
+                value={repository}
+                placeholder='The Url of the repository hosing the source code'
+                onChange={this.handleChange('repository')}
+              />
+              <TextField
+                fullWidth
+                label={'Url'}
+                name='url'
+                value={url}
+                placeholder='The url of the desired website'
+                onChange={this.handleChange('url')}
+              />
+              <div className={classes.topMarged}>
+                <InputLabel>Board categories</InputLabel>
+                <br/>
                 {_.map(statuses, (status, i) => (
-                  <div>
-                    <TextField
-                      key={i}
-                      name={`status${i}`}
-                      value={status}
-                      onChange={this.updateCategory(i)}
-                    />
-                    <IconButton
-                      className={classes.button}
-                      aria-label="Delete"
-                      onClick={() => this.deleteCategory(status)}
-                    >
-                      <Delete />
-                    </IconButton>
-                  </div>
+                  <Chip
+                    key={i}
+                    label={status}
+                    onClick={this.handleEditTask(status, i)}
+                    onDelete={this.deleteCategory(status)}
+                    className={classes.chip}
+                  />
                 ))}
-              <Button color={'primary'} onClick={this.addCategory}>New category</Button>
-            </div>
-            <DialogActions>
-              <Button color="secondary" onClick={this.props.handleClose}>Cancel</Button>
-              <Button type='submit' color="primary">Submit</Button>
-            </DialogActions>
-          </form>
+                <br/>
+                <Button color={'primary'} onClick={this.addCategory}>New category</Button>
+              </div>
+              <DialogActions>
+                <Button color="secondary" onClick={this.props.handleClose}>Cancel</Button>
+                <Button type='submit' color="primary">Submit</Button>
+              </DialogActions>
+            </form>
+          </DialogContent>
+        </Dialog>,
+        <EditTaskDialog
+          open={this.state.taskEditOpen}
+          handleClose={() => this.setState({taskEditOpen: false})}
+          handleEdit={this.updateStatus}
+          value={this.state.taskEditValue}
+        />
+      ]
+    );
+  }
+}
+
+
+class EditTaskDialog extends React.Component {
+  state = {
+    name : "",
+    index: -1
+  };
+
+  componentWillReceiveProps(nextProps, nextContext) {
+    this.setState({...nextProps.value})
+  }
+
+  render() {
+    return (
+      <Dialog
+        open={this.props.open}
+        onClose={this.handleClose}
+        aria-labelledby="form-dialog-title"
+      >
+        <DialogTitle
+          id="form-dialog-title">{this.props.name ? "Edit task name" : "New task"}</DialogTitle>
+        <DialogContent>
+          <TextField
+            autoFocus
+            margin="dense"
+            id="name"
+            label="Task name"
+            type="text"
+            onChange={(e) => this.setState({name: e.target.value})}
+            value={this.state.name}
+            fullWidth
+          />
         </DialogContent>
+        <DialogActions>
+          <Button onClick={this.props.handleClose} color="secondary">
+            Cancel
+          </Button>
+          <Button
+            onClick={() => {
+              this.props.handleEdit(this.state.name, this.state.index);
+              this.props.handleClose();
+            }}
+            color="primary"
+          >
+            Edit
+          </Button>
+        </DialogActions>
       </Dialog>
     );
   }
