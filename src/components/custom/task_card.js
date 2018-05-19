@@ -54,7 +54,8 @@ class TaskCard extends Component {
       <Card className={classes.card}>
         <CardHeader
           action={
-            <div><IconButton
+            <div>
+              <IconButton
               aria-label="More"
               aria-owns={anchorEl ? 'long-menu' : null}
               aria-haspopup="true"
