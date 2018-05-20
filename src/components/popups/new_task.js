@@ -91,7 +91,7 @@ class NewTask extends Component {
       }
     })
         .then(({data}) => {
-          this.setState({loading: false, error: ''});
+          this.setState({loading: false, error: '', name: '', type: '', description: '', status: ''});
           this.props.onClose();
           this.props.refetch();
         }).catch((error) => {
