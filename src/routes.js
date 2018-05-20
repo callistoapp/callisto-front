@@ -1,6 +1,6 @@
 import DashboardPage from './views/dashboard';
 import ReleaseList from './views/releases';
-import SettingsPage from './views/settings';
+import SettingsPage from './views/settings/settings';
 import ProfilePage from './views/profile';
 import HomePage from './views/home';
 import TaskBoard from './views/task_board';
