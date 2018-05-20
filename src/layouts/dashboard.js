@@ -12,7 +12,7 @@ import {dashboardRoutes} from "../routes";
 
 import appStyle from "../assets/jss/material-dashboard-react/appStyle";
 
-import image from "../assets/img/sidebar-2.jpg";
+import image from "../assets/img/callisto_background.jpg";
 import logo from "../assets/img/logo_callisto_white.png";
 
 const switchRoutes = (
