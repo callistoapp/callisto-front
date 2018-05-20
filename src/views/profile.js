@@ -9,6 +9,9 @@ const GET_USER = gql`
     loggedUser {
       id,
       username,
+      fullname,
+      lastname,
+      firstname,
       email,
       avatar
     }
