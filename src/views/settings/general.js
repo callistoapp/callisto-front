@@ -3,6 +3,7 @@ import ProjectForm from '../../forms/project_settings';
 import {Mutation} from "react-apollo";
 import {gql} from "apollo-boost/lib/index";
 import {Button} from "material-ui";
+import {Delete} from "@material-ui/icons";
 
 
 const DELETE_PROJECT = gql`
@@ -23,18 +24,23 @@ class General extends React.Component {
   };
 
   render() {
-    return ([
-        <ProjectForm {...this.state} handleChange={this.handleChange}/>,
-        <Mutation mutation={DELETE_PROJECT}>
-          {(mutation, { receivedData }) => (
-            <Button size="small" color="secondary" onClick={() => {
-              mutation({variables: {id: this.props.project.id}})
-            }}>
-              Delete
-            </Button>
-          )}
-        </Mutation>
-    ])
+    return (
+      <div>
+        <ProjectForm {...this.state} handleChange={this.handleChange}/>
+        <div style={{paddingTop: 10}}>
+          <Mutation mutation={DELETE_PROJECT}>
+            {(mutation, { receivedData }) => (
+              <Button size="small" color="secondary" onClick={() => {
+                mutation({variables: {id: this.props.project.id}})
+              }}>
+                <Delete/>
+                Delete Project
+              </Button>
+            )}
+          </Mutation>
+        </div>
+      </div>
+    )
   }
 };
 
