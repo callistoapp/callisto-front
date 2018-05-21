@@ -8,7 +8,7 @@ import {
   ExpansionPanelSummary,
   Typography,
   withStyles
-} from "material-ui";
+} from "@material-ui/core";
 import {ExpandMore} from "@material-ui/icons";
 import GeneralSettings from './general';
 import BoardSettings from './board';

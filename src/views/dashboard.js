@@ -3,7 +3,7 @@ import qs from 'query-string';
 import {Query} from 'react-apollo';
 import {gql} from 'apollo-boost';
 import {withRouter} from 'react-router';
-import {CircularProgress, withStyles, Card, Typography, Grid} from 'material-ui';
+import {CircularProgress, withStyles, Card, Typography, Grid} from '@material-ui/core';
 import * as _ from 'lodash';
 
 const GET_PROJECT = gql`

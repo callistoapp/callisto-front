@@ -12,11 +12,11 @@ import {
   MenuItem,
   DialogActions,
   Button
-} from 'material-ui'
+} from '@material-ui/core'
 import {compose, graphql} from "react-apollo/index";
 import {gql} from 'apollo-boost';
 import * as _ from "lodash";
-import { withStyles } from 'material-ui/styles';
+import { withStyles } from '@material-ui/core';
 import qs from 'query-string';
 import {withRouter} from 'react-router-dom';
 

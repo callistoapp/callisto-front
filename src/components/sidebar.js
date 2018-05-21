@@ -65,7 +65,7 @@ import {
   FormControl,
   InputLabel,
   IconButton
-} from "material-ui";
+} from "@material-ui/core";
 
 import {Add} from '@material-ui/icons';
 

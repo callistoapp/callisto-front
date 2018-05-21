@@ -12,7 +12,7 @@ import {
   Paper,
   ClickAwayListener,
   Hidden
-} from "material-ui";
+} from "@material-ui/core";
 import { Person, Notifications} from "@material-ui/icons";
 
 import headerLinksStyle from "../assets/jss/material-dashboard-react/headerLinksStyle";

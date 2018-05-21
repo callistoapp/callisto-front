@@ -7,8 +7,8 @@ import {
   IconButton,
   Menu,
   MenuItem, ListItemText, ListItemIcon
-} from 'material-ui';
-import {withStyles} from 'material-ui/styles';
+} from '@material-ui/core';
+import {withStyles} from '@material-ui/core';
 import {MoreVert, Edit, Delete} from '@material-ui/icons';
 const styles = theme => ({
   root    : {

@@ -3,7 +3,7 @@ import {Query} from 'react-apollo';
 import {gql} from 'apollo-boost';
 import qs from "query-string";
 import * as _ from 'lodash';
-import {Button, List, ListItem, ListItemText, withStyles} from "material-ui";
+import {Button, List, ListItem, ListItemText, withStyles} from "@material-ui/core";
 import {Add} from "@material-ui/icons";
 import NewRelease from '../components/popups/new_release'
 

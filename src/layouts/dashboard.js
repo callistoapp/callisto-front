@@ -2,7 +2,7 @@ import React from "react";
 import * as _ from 'lodash';
 import PropTypes from "prop-types";
 import { Switch, Route, Redirect } from "react-router-dom";
-import { withStyles } from "material-ui";
+import { withStyles } from "@material-ui/core";
 
 import Sidebar from "../components/sidebar";
 import NewProject from "../components/popups/new_project";

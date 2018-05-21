@@ -2,7 +2,7 @@ import React from 'react';
 import ProjectForm from '../../forms/project_settings';
 import {Mutation} from "react-apollo";
 import {gql} from "apollo-boost/lib/index";
-import {Button} from "material-ui";
+import {Button} from "@material-ui/core";
 import {Delete} from "@material-ui/icons";
 
 

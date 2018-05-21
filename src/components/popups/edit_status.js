@@ -7,7 +7,7 @@ import {
   DialogActions,
   TextField,
   Button
-} from 'material-ui'
+} from '@material-ui/core'
 
 class EditStatusDialog extends React.Component {
   state = {

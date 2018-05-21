@@ -14,10 +14,10 @@ import {
   TextField,
   InputLabel,
   Button, Chip
-} from 'material-ui'
+} from '@material-ui/core'
 import {graphql} from 'react-apollo';
 import {gql} from 'apollo-boost';
-import {withStyles} from 'material-ui/styles';
+import {withStyles} from '@material-ui/core';
 import {withRouter} from 'react-router';
 import EditStatusDialog from './edit_status';
 

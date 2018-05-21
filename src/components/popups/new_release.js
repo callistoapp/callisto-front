@@ -10,7 +10,7 @@ import {
   TextField,
   Dialog,
   Button
-} from 'material-ui'
+} from '@material-ui/core'
 import {graphql, Mutation} from 'react-apollo';
 import {gql} from 'apollo-boost';
 import qs from 'query-string';

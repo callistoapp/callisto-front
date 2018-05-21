@@ -3,7 +3,7 @@ import * as _ from 'lodash';
 import gql from "graphql-tag";
 import { Query } from "react-apollo";
 import { withRouter } from "react-router";
-import {List, ListItem, ListItemText} from 'material-ui';
+import {List, ListItem, ListItemText} from '@material-ui/core';
 
 const GET_PROJECTS = gql`
   {projectList {

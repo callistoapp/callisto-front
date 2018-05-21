@@ -1,9 +1,9 @@
 import * as _ from 'lodash';
 import React, {Component} from 'react';
-import {Button, Grid, IconButton} from 'material-ui';
+import {Button, Grid, IconButton} from '@material-ui/core';
 import TaskCard from '../components/custom/task_card'
 import RegularCard from '../components/regular_card';
-import {withStyles} from 'material-ui/styles';
+import {withStyles} from '@material-ui/core';
 import {Add, Edit} from '@material-ui/icons';
 import {graphql, compose} from 'react-apollo';
 import {gql} from 'apollo-boost';
