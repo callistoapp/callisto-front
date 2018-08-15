@@ -1,0 +1,14 @@
+FROM node
+
+MAINTAINER Clement Mondion
+
+WORKDIR /opt/app
+
+RUN mkdir -p /opt/app && cd /opt/app
+ADD . /opt/app
+
+RUN rm -rf node_modules && npm i --force --no-package-lock
+
+EXPOSE 3000
+
+RUN npm run build
